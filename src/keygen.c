@@ -2,25 +2,29 @@
 #include <time.h>
 #include "keygen.h"
 #include "poly.h"
+#include "ntt.h"
 
 void generate_keys(PublicKey* pub, PrivateKey* priv) {
     srand(time(NULL));
 
-    Polynomial p = generate_random_poly(2, 10);   // Changed to degree 2
-    Polynomial q = generate_random_poly(2, 10);
-    pub->N = poly_multiply(p, q);
+    // Use degree = N - 1 for NTT compatibility
+    Polynomial p = generate_random_poly(N - 1, 10);   
+    Polynomial q = generate_random_poly(N - 1, 10);
 
-    Polynomial s = generate_random_poly(2, 5);
-    Polynomial x = generate_random_poly(2, 5);
-    Polynomial y = generate_random_poly(2, 5);
-    Polynomial a = generate_random_poly(2, 5);
-    Polynomial b = generate_random_poly(2, 5);
+    Polynomial s = generate_random_poly(N - 1, 5);
+    Polynomial x = generate_random_poly(N - 1, 5);
+    Polynomial y = generate_random_poly(N - 1, 5);
+    Polynomial a = generate_random_poly(N - 1, 5);
+    Polynomial b = generate_random_poly(N - 1, 5);
 
-    Polynomial X = poly_multiply(x, x);
-    Polynomial Y = poly_multiply(y, y);
+    // NTT-based polynomial multiplication
+    pub->commit = ntt_multiply(p, q);
+    Polynomial X = ntt_multiply(x, x);
+    Polynomial Y = ntt_multiply(y, y);
 
-    Polynomial v = generate_random_poly(2, 5);
+    Polynomial v = generate_random_poly(N - 1, 5);
 
+    // Assign to public and private keys
     pub->v = v;
     pub->a = a;
     pub->b = b;

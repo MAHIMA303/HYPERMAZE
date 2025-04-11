@@ -4,7 +4,8 @@
 #include "poly.h"
 
 typedef struct {
-    Polynomial N, v, a, b;
+    Polynomial commit;  // instead of N
+    Polynomial v, a, b;
 } PublicKey;
 
 typedef struct {
