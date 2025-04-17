@@ -1,16 +1,16 @@
-// ==== keygen.h ====
+// === keygen.h ===
 #ifndef KEYGEN_H
 #define KEYGEN_H
+
 #include "poly.h"
 
 typedef struct {
-    Polynomial a;
-    Polynomial commit;  // a*s + e
+    Polynomial h;  // Public key: h = g/f mod q
 } PublicKey;
 
 typedef struct {
-    Polynomial s;
-    Polynomial e;  // optional
+    Polynomial f, g;     // Secret key small polynomials
+    Polynomial F, G;     // Extended basis (trapdoor)
 } PrivateKey;
 
 void generate_keys(PublicKey* pub, PrivateKey* priv);
