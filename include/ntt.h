@@ -1,17 +1,16 @@
 #ifndef NTT_H
 #define NTT_H
 
-#include <stdint.h>
-#include "poly.h"
+#include "poly.h"  // ✅ Must come before using Polynomial
 
-#define N 8
-#define Q 17
+#define Q 12289
+#define N 512
 
-void ntt(int16_t a[N]);
-void intt(int16_t a[N]);
-void pointwise_mul(int16_t r[N], const int16_t a[N], const int16_t b[N]);
+extern const int16_t omega[N];
+extern const int16_t omega_inv[N];
+extern int16_t psi[N];
+extern int16_t psi_inv[N];
 
-// Add this line 👇 to expose the function
 Polynomial ntt_multiply(Polynomial a, Polynomial b);
 
 #endif

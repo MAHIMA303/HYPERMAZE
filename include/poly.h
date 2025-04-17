@@ -1,14 +1,17 @@
 #ifndef POLY_H
 #define POLY_H
 
-#define MAX_DEGREE 10
+#include <stdint.h>   // For int16_t
+
+#define N 512          // Degree of polynomial
+#define MAX_DEGREE N   // For safety, matching N
 
 typedef struct {
-    int coeffs[MAX_DEGREE + 1];
+    int16_t coeffs[N];
     int degree;
 } Polynomial;
 
-Polynomial generate_random_poly(int degree, int max_val);
+Polynomial generate_random_poly(int min, int max);
 Polynomial poly_multiply(Polynomial a, Polynomial b);
 void print_poly(Polynomial p);
 
