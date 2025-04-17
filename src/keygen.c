@@ -1,3 +1,4 @@
+// ==== keygen.c ====
 #include <stdlib.h>
 #include <time.h>
 #include "keygen.h"
@@ -7,31 +8,24 @@
 void generate_keys(PublicKey* pub, PrivateKey* priv) {
     srand(time(NULL));
 
-    // Use degree = N - 1 for NTT compatibility
-    Polynomial p = generate_random_poly(N - 1, 10);   
-    Polynomial q = generate_random_poly(N - 1, 10);
+    // Step 1: Public parameter
+    Polynomial a = generate_random_poly(0, Q);
 
-    Polynomial s = generate_random_poly(N - 1, 5);
-    Polynomial x = generate_random_poly(N - 1, 5);
-    Polynomial y = generate_random_poly(N - 1, 5);
-    Polynomial a = generate_random_poly(N - 1, 5);
-    Polynomial b = generate_random_poly(N - 1, 5);
+    // Step 2: Small secret and error
+    Polynomial s = generate_secret_poly(3);
+    Polynomial e = generate_error_poly(3);
 
-    // NTT-based polynomial multiplication
-    pub->commit = ntt_multiply(p, q);
-    Polynomial X = ntt_multiply(x, x);
-    Polynomial Y = ntt_multiply(y, y);
+    // Step 3: Commitment
+    Polynomial as = ntt_multiply(a, s);
+    Polynomial commit;
+    for (int i = 0; i < N; i++) {
+        commit.coeffs[i] = (as.coeffs[i] + e.coeffs[i]) % Q;
+    }
 
-    Polynomial v = generate_random_poly(N - 1, 5);
-
-    // Assign to public and private keys
-    pub->v = v;
+    // Store keys
     pub->a = a;
-    pub->b = b;
+    pub->commit = commit;
 
     priv->s = s;
-    priv->x = x;
-    priv->y = y;
-    priv->X = X;
-    priv->Y = Y;
+    priv->e = e;
 }

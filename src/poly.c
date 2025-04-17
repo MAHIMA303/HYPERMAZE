@@ -1,8 +1,11 @@
+// ==== poly.c ====
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "poly.h"
-#include "params.h"
+#include "params.h"  // ✅ Make sure this is here!
+
+
 Polynomial generate_random_poly(int min, int max) {
     Polynomial poly;
     for (int i = 0; i < N; i++) {
@@ -10,24 +13,35 @@ Polynomial generate_random_poly(int min, int max) {
     }
     return poly;
 }
-Polynomial poly_multiply(Polynomial a, Polynomial b) {
-    Polynomial result;
 
-    // Initialize result coefficients
+Polynomial generate_secret_poly(int bound) {
+    Polynomial poly;
     for (int i = 0; i < N; i++) {
-        result.coeffs[i] = 0;
+        poly.coeffs[i] = (rand() % (2 * bound + 1)) - bound;
     }
+    return poly;
+}
 
-    // Multiply polynomials (naive method)
+Polynomial generate_error_poly(int bound) {
+    Polynomial poly;
+    for (int i = 0; i < N; i++) {
+        poly.coeffs[i] = (rand() % (2 * bound + 1)) - bound;
+    }
+    return poly;
+}
+
+Polynomial poly_multiply(Polynomial a, Polynomial b) {
+    Polynomial result = { .degree = N - 1 };
+    for (int i = 0; i < N; i++) result.coeffs[i] = 0;
+
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             if (i + j < N) {
                 result.coeffs[i + j] += a.coeffs[i] * b.coeffs[j];
-                result.coeffs[i + j] %= Q;  // Optional: if working mod Q
+                result.coeffs[i + j] %= Q;
             }
         }
     }
-
     return result;
 }
 
@@ -40,3 +54,4 @@ void print_poly(Polynomial p) {
     }
     printf("\n");
 }
+

@@ -13,6 +13,8 @@ typedef struct {
 
 Polynomial generate_random_poly(int min, int max);
 Polynomial poly_multiply(Polynomial a, Polynomial b);
+Polynomial generate_secret_poly();
+Polynomial generate_error_poly();
 void print_poly(Polynomial p);
 
-#endif
+#endif // POLY_H
